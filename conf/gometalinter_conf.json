@@ -1,0 +1,27 @@
+{
+    "Deadline": "120s",
+    "Vendor": true,
+    "Exclude": ["proto/", "playground/", "vendor/", ".*_test.go"],
+    "DisableAll": true,
+    "Enable": [
+        "deadcode",
+        "dupl",
+        "errcheck",
+        "ineffassign",
+        "interfacer",
+        "goconst",
+        "gocyclo",
+        "golint",
+        "gotype",
+        "ineffassign",
+        "interfacer",
+        "maligned",
+        "misspell",
+        "staticcheck",
+        "structcheck",
+        "unconvert",
+        "unparam",
+        "vet",
+        "vetshadow"
+    ]
+}
