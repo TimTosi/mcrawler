@@ -1,0 +1,87 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/golang:1.11
+    working_directory: /go/src/github.com/timtosi/mcrawler
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: make install
+      - run:
+          name: Build binaries
+          command: make build
+      - persist_to_workspace:
+          root: cmd
+          paths:
+            - mcrawler
+
+  run-test:
+    docker:
+      - image: circleci/golang:1.11
+    working_directory: /go/src/github.com/timtosi/mcrawler
+    environment:
+      TEST_RESULTS: /tmp/test-results/go-test
+    steps:
+      - checkout
+      - run:
+          name: Set test metadata requirements
+          command: |
+            mkdir -p $TEST_RESULTS
+            go get github.com/jstemmer/go-junit-report
+      - run:
+          name: Install dependencies
+          command: make install
+      - run:
+          name: Run test suite
+          command: |
+              trap "go-junit-report <${TEST_RESULTS}/go-test.out > ${TEST_RESULTS}/go-test-report.xml" EXIT
+              make test | tee ${TEST_RESULTS}/go-test.out
+      - run:
+          name: Upload coverage file
+          command: bash <(curl -s https://codecov.io/bash)
+      - store_artifacts:
+          path: /tmp/test-results
+          destination: raw-test-output
+      - store_test_results:
+          path: /tmp/test-results
+
+  deploy-image:
+    machine: true
+    working_directory: ~/.go_workspace/src/github.com/timtosi/mcrawler
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /tmp/cmd
+      - run:
+          name: Log Docker user
+          command: docker login -u $DOCKER_USER -p $DOCKER_PASS
+      - run:
+          name: Build mcrawler image
+          command: |
+            mv /tmp/cmd/mcrawler build/docker/mcrawler/
+            cp cmd/conf/mcrawler.conf.yaml build/docker/mcrawler/
+            docker build -t timtosi/mcrawler:$DOCKER_IMAGE_TAG build/docker/mcrawler/
+            docker build -t timtosi/mcrawler:latest build/docker/mcrawler/
+      - run:
+          name: Push mcrawler image to Docker Hub
+          command: |
+            docker push timtosi/mcrawler:$DOCKER_IMAGE_TAG
+            docker push timtosi/mcrawler:latest
+
+workflows:
+  version: 2
+  build-test:
+    jobs:
+      - run-test
+      - build
+      - deploy-image:
+          context: deploy-dockerhub
+          requires:
+            - run-test
+            - build
+          filters:
+            branches:
+              only:
+                - master
