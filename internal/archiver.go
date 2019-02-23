@@ -47,7 +47,7 @@ func (a *Archiver) Pipe(wg *sync.WaitGroup, in <-chan *domain.Target, out chan<-
 	defer close(out)
 
 	for t := range in {
-		if a.IsAlreadySeen(t.BaseURL) == true {
+		if a.IsAlreadySeen(t.BaseURL) {
 			wg.Done()
 		} else {
 			out <- t
