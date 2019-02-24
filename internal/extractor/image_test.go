@@ -8,7 +8,7 @@ import (
 	"golang.org/x/net/html"
 )
 
-func TestGetImg(t *testing.T) {
+func TestImage_GetImg(t *testing.T) {
 	testCases := []struct {
 		name        string
 		mockContent []byte
