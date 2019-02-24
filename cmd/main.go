@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"os"
 
 	crawler "github.com/timtosi/mcrawler/internal"
 	"github.com/timtosi/mcrawler/internal/domain"
@@ -9,19 +10,28 @@ import (
 )
 
 func main() {
-	t := domain.NewTarget("localhost:8080") // TO UPDATE
+	if len(os.Args[1]) == 0 {
+		log.Fatal(`usage: ./mcrawler <BASE_URL>`)
+	}
 
-	c := crawler.NewCrawler()
-	w := crawler.NewWorker()
-	e := extractor.NewExtractor(extractor.GetImg, extractor.GetLinkBasic)
-	a := crawler.NewArchiver()
+	t := domain.NewTarget(os.Args[1])
+	m := crawler.NewMapper()
 	f, err := crawler.NewFollower(t.BaseURL)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	if err := c.Run(t, w, e, f, a); err != nil {
+	if err := crawler.NewCrawler().Run(
+		t,
+		crawler.NewArchiver(),
+		m,
+		f,
+		crawler.NewWorker(),
+		extractor.NewExtractor(extractor.GetImg, extractor.GetLinkBasic),
+	); err != nil {
 		log.Fatal(err)
 	}
+
+	m.Render()
 	log.Printf("shutdown")
 }
