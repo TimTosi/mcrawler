@@ -9,36 +9,47 @@ import (
 	"github.com/timtosi/mcrawler/internal/domain"
 )
 
+// getHost is a helper function used to retrieve the host part of a link. It
+// returns the host as a `string` or an `error`.
+//
+// NOTE: The `link` argument may be relative (a path, without a host) or
+// absolute (starting with a scheme).
+func getHost(link string) (string, error) {
+	urlStruct, err := url.Parse(link)
+	if err != nil {
+		return "", fmt.Errorf("getHost: %v", err)
+	} else if len(urlStruct.Host) == 0 {
+		return "", fmt.Errorf("getHost: no host found in %s", link)
+	}
+	return urlStruct.Host, nil
+}
+
 // Follower is a `struct` controlling that the pages crawled are only located
 // on the `originHost` host.
 type Follower struct {
 	originHost string
 }
 
-// NewFollower returns a new `*crawler.Follower` or an `error` if something
-// bad occurs.
+// NewFollower returns a new `*crawler.Follower` or an `error` if `link` cannot
+// be parsed properly by `url.Parse`.
 func NewFollower(originURL string) (*Follower, error) {
-	urlStruct, err := url.Parse(originURL)
+	host, err := getHost(originURL)
 	if err != nil {
 		return nil, fmt.Errorf("NewFollower: %v", err)
-	} else if len(urlStruct.Host) == 0 {
-		return nil, fmt.Errorf("NewFollower: no host found in %s", originURL)
 	}
-	return &Follower{originHost: urlStruct.Host}, nil
+	return &Follower{originHost: host}, nil
 }
 
-// IsSameHost ensures that `link` is located on `originHost`. It returns `true`
-// if it is the case, `false` otherwise or an `error` if `link` cannot
+// IsSameHost ensures that `link` is located on `f.originHost`. It returns
+// `true` if it is the case, `false` otherwise or an `error` if `link` cannot
 // be parsed properly by `url.Parse`.
 func (f *Follower) IsSameHost(link string) (bool, error) {
-	urlStruct, err := url.Parse(link)
+	host, err := getHost(link)
 	if err != nil {
 		return false, fmt.Errorf("IsSameHost: %v", err)
-	} else if len(urlStruct.Host) == 0 {
-		return false, fmt.Errorf("IsSameHost: no host found in %s", link)
 	}
 
-	if urlStruct.Host != f.originHost {
+	if host != f.originHost {
 		return false, nil
 	}
 	return true, nil
