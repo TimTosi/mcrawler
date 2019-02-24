@@ -20,6 +20,11 @@ func TestImage_GetImg(t *testing.T) {
 			"yes.png",
 		},
 		{
+			"emptyLink",
+			[]byte(`<img src="">`),
+			"",
+		},
+		{
 			"endTag",
 			[]byte(`</img>`),
 			"",

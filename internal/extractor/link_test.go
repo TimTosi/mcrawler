@@ -20,6 +20,11 @@ func TestLink_GetLinkBasic(t *testing.T) {
 			"https://www.youtube.com/watch?v=4D2qcbu26gs",
 		},
 		{
+			"emptyLink",
+			[]byte(`<a href="">`),
+			"",
+		},
+		{
 			"endTag",
 			[]byte(`</a>`),
 			"",
@@ -63,6 +68,11 @@ func TestLink_GetLinkNoFollow(t *testing.T) {
 			"regular",
 			[]byte(`<a href="https://www.youtube.com/watch?v=M9EjE4qm7b8">`),
 			"https://www.youtube.com/watch?v=M9EjE4qm7b8",
+		},
+		{
+			"emptyLink",
+			[]byte(`<a href="">`),
+			"",
 		},
 		{
 			"endTag",
