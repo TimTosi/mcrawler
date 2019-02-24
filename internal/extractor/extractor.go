@@ -98,14 +98,10 @@ func (e *Extractor) Pipe(wg *sync.WaitGroup, in <-chan *domain.Target, out chan<
 
 	for t := range in {
 		links := e.ExtractLinks(t.BaseURL, t.Content)
-		if len(links) == 0 {
-			log.Printf("Extractor: %s no link found in %s", t.BaseURL, t.Content)
-			wg.Done()
-			continue
-		}
-
 		for _, link := range links {
+			wg.Add(1)
 			out <- domain.NewTarget(link)
 		}
+		wg.Done()
 	}
 }

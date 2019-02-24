@@ -56,7 +56,10 @@ func (f *Follower) Pipe(wg *sync.WaitGroup, in <-chan *domain.Target, out chan<-
 	for t := range in {
 		if ok, err := f.IsSameHost(t.BaseURL); err != nil {
 			log.Printf("Follower: %f", err)
-		} else if ok {
+			wg.Done()
+		} else if !ok {
+			wg.Done()
+		} else {
 			out <- t
 		}
 	}

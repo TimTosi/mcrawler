@@ -5,10 +5,9 @@ package domain
 type Target struct {
 	BaseURL string
 	Content []byte
-	Done    bool
 }
 
 // NewTarget returns a new `*domain.Target`.
 func NewTarget(baseURL string) *Target {
-	return &Target{BaseURL: baseURL, Done: false}
+	return &Target{BaseURL: baseURL}
 }

@@ -59,9 +59,7 @@ func (m *Mapper) Pipe(wg *sync.WaitGroup, in <-chan *domain.Target, out chan<- *
 	defer close(out)
 
 	for t := range in {
-		if t.Done {
-			m.Add(t)
-		}
+		m.Add(t)
 		out <- t
 	}
 }

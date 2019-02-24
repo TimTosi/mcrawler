@@ -77,7 +77,6 @@ func (w *Worker) Pipe(wg *sync.WaitGroup, in <-chan *domain.Target, out chan<- *
 			log.Printf("Worker: %f", err)
 			wg.Done()
 		} else {
-			t.Done = true
 			out <- t
 		}
 	}

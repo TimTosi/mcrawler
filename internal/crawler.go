@@ -20,20 +20,15 @@ func NewCrawler() *Crawler {
 
 // pipeEnd is the function representing the edge of the internal crawling
 // pipeline. It cycles new links found during any `crawler.Pipe` to
-// `c.urlFrontier` and manages the `sync.WaitGroup` coordinating the pipeline.
+// `c.urlFrontier`.
 //
 // NOTE: This function will loop over a channel until `in` is closed.
 //
-// NOTE: `crawler.Pipe`s have to `wg.Done()` each time they discard a
+// NOTE: All `crawler.Pipe`s have to `wg.Done()` each time they discard a
 // `*domain.Target` from the pipeline.
-func (c *Crawler) pipeEnd(wg *sync.WaitGroup, in <-chan *domain.Target) {
+func (c *Crawler) pipeEnd(in <-chan *domain.Target) {
 	for t := range in {
-		if !t.Done {
-			wg.Add(1)
-			c.urlFrontier <- t
-		} else {
-			wg.Done()
-		}
+		c.urlFrontier <- t
 	}
 }
 
@@ -55,7 +50,7 @@ func (c *Crawler) Run(t *domain.Target, pipeline ...Pipe) error {
 		go pipe.Pipe(&wg, in, out)
 		in = out
 	}
-	go c.pipeEnd(&wg, in)
+	go c.pipeEnd(in)
 
 	wg.Wait()
 	close(c.urlFrontier)
