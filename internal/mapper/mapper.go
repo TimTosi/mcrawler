@@ -1,4 +1,4 @@
-package crawler
+package mapper
 
 import (
 	"fmt"
@@ -13,7 +13,7 @@ type Mapper struct {
 	mu      *sync.RWMutex
 }
 
-// NewMapper returns a new `*crawler.Mapper`.
+// NewMapper returns a new `*mapper.Mapper`.
 func NewMapper() *Mapper {
 	return &Mapper{
 		siteMap: make([]string, 0),

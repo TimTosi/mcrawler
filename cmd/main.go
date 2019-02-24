@@ -7,6 +7,7 @@ import (
 	crawler "github.com/timtosi/mcrawler/internal"
 	"github.com/timtosi/mcrawler/internal/domain"
 	"github.com/timtosi/mcrawler/internal/extractor"
+	"github.com/timtosi/mcrawler/internal/mapper"
 )
 
 func main() {
@@ -15,7 +16,7 @@ func main() {
 	}
 
 	t := domain.NewTarget(os.Args[1])
-	m := crawler.NewMapper()
+	m := mapper.NewMapper()
 	f, err := crawler.NewFollower(t.BaseURL)
 	if err != nil {
 		log.Fatal(err)
