@@ -9,26 +9,26 @@ import (
 
 // Mapper is a `struct` used for rendering a Site Map.
 type Mapper struct {
-	siteMap map[string]bool
+	siteMap []string
 	mu      *sync.RWMutex
 }
 
 // NewMapper returns a new `*crawler.Mapper`.
 func NewMapper() *Mapper {
 	return &Mapper{
-		siteMap: make(map[string]bool),
+		siteMap: make([]string, 0),
 		mu:      &sync.RWMutex{},
 	}
 }
 
-// Add adds `t.BaseURL` to `m.siteMap`.
+// Add adds `link` to `m.siteMap`.
 //
 // NOTE: This function is thread-safe.
-func (m *Mapper) Add(t *domain.Target) {
+func (m *Mapper) Add(link string) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
 
-	m.siteMap[t.BaseURL] = true
+	m.siteMap = append(m.siteMap, link)
 }
 
 // Render renders a Site Map of urls contained in `m.siteMap` to standard
@@ -42,7 +42,7 @@ func (m *Mapper) Render() {
 	fmt.Println(`<?xml version="1.0" encoding="UTF-8"?>`)
 	fmt.Println(`<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`)
 
-	for k := range m.siteMap {
+	for _, k := range m.siteMap {
 		fmt.Println("\t<url>")
 		fmt.Printf("\t\t<loc>%s</loc>\n", k)
 		fmt.Println("\t</url>")
@@ -59,7 +59,7 @@ func (m *Mapper) Pipe(wg *sync.WaitGroup, in <-chan *domain.Target, out chan<- *
 	defer close(out)
 
 	for t := range in {
-		m.Add(t)
+		m.Add(t.BaseURL)
 		out <- t
 	}
 }
