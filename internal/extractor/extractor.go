@@ -53,9 +53,7 @@ type Extractor struct {
 // NewExtractor returns a new `*extractor.Extractor`.
 func NewExtractor(checkFuncs ...CheckFunc) *Extractor {
 	e := Extractor{cf: make([]CheckFunc, 0)}
-	for _, f := range checkFuncs {
-		e.cf = append(e.cf, f)
-	}
+	e.cf = append(e.cf, checkFuncs...)
 	return &e
 }
 
