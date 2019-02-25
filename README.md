@@ -88,7 +88,7 @@ mechanisms in order to avoid infinite loops if you do not use those provided by
 [`default`](https://github.com/TimTosi/mcrawler/blob/master/internal/archiver.go).
 
 All the goroutines are controlled & coordinated through a `sync.WaitGroup`
-created in [crawler.Run](https://github.com/TimTosi/mcrawler/blob/master/internal/crawler/crawler.go#L42-58).
+created in [crawler.Run](https://github.com/TimTosi/mcrawler/blob/master/internal/crawler/crawler.go#L42-L58).
 
 > :bulb: If you introduce new `internal.Pipe`s in the pipeline, don't forget
 > to `wg.Done()` each time you discard an element or to `wg.Add(1)` each time
@@ -141,7 +141,7 @@ Here is a list and description of components provided with this program:
 ## How To Add a Component
 
 In order to add a component in the pipeline, you need to create a `struct`
-implementing the [`internal.Pipe`](https://github.com/TimTosi/mcrawler/blob/master/internal/pipe.go#L11-13)
+implementing the [`internal.Pipe`](https://github.com/TimTosi/mcrawler/blob/master/internal/pipe.go#L11-L13)
 interface.
 
 ```golang
