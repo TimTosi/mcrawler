@@ -2,6 +2,8 @@ package extractor
 
 import (
 	"io/ioutil"
+	"log"
+	"os"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -289,4 +291,11 @@ func TestExtractor_ExtractLinks(t *testing.T) {
 			assert.ElementsMatch(t, tc.expectedLinks, res)
 		})
 	}
+}
+
+func TestMain(m *testing.M) {
+	log.SetOutput(ioutil.Discard)
+	defer log.SetOutput(os.Stderr)
+
+	os.Exit(m.Run())
 }
