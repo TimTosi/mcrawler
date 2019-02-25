@@ -7,5 +7,5 @@ services:
         entrypoint:
             - /mcrawler
         command:
-            - "localhost:8080"
+            - "http://localhost:8080"
         hostname: mcrawler
