@@ -31,6 +31,18 @@ func (m *Mapper) Add(link string) {
 	m.siteMap = append(m.siteMap, link)
 }
 
+// SiteMap returns a copy of `m.siteMap`.
+//
+// NOTE: This function is thread-safe.
+func (m *Mapper) SiteMap() []string {
+	m.mu.RLock()
+	defer m.mu.RUnlock()
+
+	smCopy := make([]string, len(m.siteMap))
+	copy(smCopy, m.siteMap)
+	return smCopy
+}
+
 // Render renders a Site Map of urls contained in `m.siteMap` to standard
 // output.
 //
