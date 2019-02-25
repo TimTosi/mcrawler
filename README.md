@@ -49,7 +49,7 @@ program.
 This project comes with already provided `internal.Pipe` that you can use.
 
 The default pipeline provided with this project and found in the
-[cmd](https://github.com/TimTosi/mcrawler/blob/master/cmd/main.go#L26-33)
+[cmd](https://github.com/TimTosi/mcrawler/blob/master/cmd/main.go#L26-L33)
 directory looks like this:
 
 
