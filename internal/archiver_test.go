@@ -11,15 +11,14 @@ import (
 
 func TestArchiver_NewArchiver(t *testing.T) {
 	testCases := []struct {
-		name               string
-		expectedAssertFunc func(assert.TestingT, interface{}, ...interface{}) bool
+		name string
 	}{
-		{"regular", assert.NotNil},
+		{"regular"},
 	}
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			tc.expectedAssertFunc(t, NewArchiver())
+			assert.NotPanics(t, func() { NewArchiver() })
 		})
 	}
 }
