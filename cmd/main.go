@@ -4,7 +4,8 @@ import (
 	"log"
 	"os"
 
-	crawler "github.com/timtosi/mcrawler/internal"
+	"github.com/timtosi/mcrawler/internal"
+	"github.com/timtosi/mcrawler/internal/crawler"
 	"github.com/timtosi/mcrawler/internal/domain"
 	"github.com/timtosi/mcrawler/internal/extractor"
 	"github.com/timtosi/mcrawler/internal/mapper"
@@ -17,18 +18,18 @@ func main() {
 
 	t := domain.NewTarget(os.Args[1])
 	m := mapper.NewMapper()
-	f, err := crawler.NewFollower(t.BaseURL)
+	f, err := internal.NewFollower(t.BaseURL)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	if err := crawler.NewCrawler().Run(
 		t,
-		crawler.NewArchiver(),
+		internal.NewArchiver(),
 		m,
 		f,
-		crawler.NewWorker(),
-		extractor.NewExtractor(extractor.GetImg, extractor.GetLinkBasic),
+		internal.NewWorker(),
+		extractor.NewExtractor(extractor.GetImg, extractor.GetLinkNoFollow),
 	); err != nil {
 		log.Fatal(err)
 	}
