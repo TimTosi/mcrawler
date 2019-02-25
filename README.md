@@ -137,6 +137,20 @@ go build && ./mcrawler "http://localhost:8080"
 
 Here is a list and description of components provided with this program:
 
+* Worker: This component fetch a webpage located at `domain.Target.BaseURL` and
+populates `domain.Target.Content`.
+
+* Archiver: This component discards any `domain.Target` already seen.
+
+* Mapper: This component keep a record of every single `domain.Target` passing
+through to display a sitemap visualization with the `mapper.Render` function.
+
+* Follower: This component discards `domain.Target` when a different host
+than `internal.Follower.originHost` is found.
+
+* Extractor: This component parses `domain.Target` to retrieve any link matching
+with one of its `extractor.CheckFunc` function.
+
 
 ## How To Add a Component
 
