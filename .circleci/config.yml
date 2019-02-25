@@ -61,7 +61,6 @@ jobs:
           name: Build mcrawler image
           command: |
             mv /tmp/cmd/mcrawler build/docker/mcrawler/
-            cp cmd/conf/mcrawler.conf.yaml build/docker/mcrawler/
             docker build -t timtosi/mcrawler:$DOCKER_IMAGE_TAG build/docker/mcrawler/
             docker build -t timtosi/mcrawler:latest build/docker/mcrawler/
       - run:

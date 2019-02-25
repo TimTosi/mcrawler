@@ -29,7 +29,6 @@ build: lint
 # Build project Docker images for dev environment.
 .PHONY: docker-build
 docker-build: build
-		cp cmd/conf/mcrawler.conf.yaml build/docker/mcrawler/ && \
 		cp cmd/mcrawler build/docker/mcrawler/ && \
 		docker build -t timtosi/mcrawler:latest build/docker/mcrawler/
 
