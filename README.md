@@ -83,9 +83,9 @@ T        +-------------------+       +-------------------+  |
 
 ```
 
-This pipeline cycles on itself so you have to introduce edge condition
-mechanisms in order to avoid infinite loops if you do not use those provided by
-[`default`](https://github.com/TimTosi/mcrawler/blob/master/internal/archiver.go).
+> :exclamation: This pipeline cycles on itself so you have to introduce edge
+> condition mechanisms in order to avoid infinite loops if you do not use those
+> provided by [`default`](https://github.com/TimTosi/mcrawler/blob/master/internal/archiver.go).
 
 All the goroutines are controlled & coordinated through a `sync.WaitGroup`
 created in [crawler.Run](https://github.com/TimTosi/mcrawler/blob/master/internal/crawler/crawler.go#L42-L58).
