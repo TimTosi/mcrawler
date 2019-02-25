@@ -12,8 +12,7 @@ import (
 // getHost is a helper function used to retrieve the host part of a link. It
 // returns the host as a `string` or an `error`.
 //
-// NOTE: The `link` argument may be relative (a path, without a host) or
-// absolute (starting with a scheme).
+// NOTE: The `link` argument must be absolute (starting with a scheme).
 func getHost(link string) (string, error) {
 	urlStruct, err := url.Parse(link)
 	if err != nil {
