@@ -1,4 +1,4 @@
-package crawler
+package internal
 
 import (
 	"fmt"
@@ -115,14 +115,14 @@ func TestWorker_Pipe(t *testing.T) {
 		},
 	}
 
-	mockServer := mockServer()
-	defer mockServer.Close()
+	ms := mockServer()
+	defer ms.Close()
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			w := NewWorker()
 
-			tgt := domain.NewTarget(fmt.Sprintf("%s%s", mockServer.URL, tc.mockURL))
+			tgt := domain.NewTarget(fmt.Sprintf("%s%s", ms.URL, tc.mockURL))
 
 			inChan := make(chan *domain.Target)
 			outChan := make(chan *domain.Target)
