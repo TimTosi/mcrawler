@@ -126,12 +126,10 @@ func TestArchiver_Pipe(t *testing.T) {
 			select {
 			case res := <-outChan:
 				assert.Equal(t, tc.expectedTarget, res)
-				break
-			case <-time.After(3 * time.Second):
+			case <-time.After(1 * time.Second):
 				if tc.mockSeen == 0 {
 					t.Errorf("%s timeout", tc.name)
 				}
-				break
 			}
 
 			for k := range a.archive {
