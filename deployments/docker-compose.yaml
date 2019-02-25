@@ -2,6 +2,7 @@ version: '3.1'
 services:
     mini-crawler:
         image: timtosi/mcrawler:latest
+        network_mode: host
         cap_drop:
             - ALL
         entrypoint:
