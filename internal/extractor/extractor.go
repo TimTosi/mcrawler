@@ -12,6 +12,16 @@ import (
 	"golang.org/x/net/html"
 )
 
+// validateScheme returns `true` `scheme` correspond to `http`, `https` or `ftp`
+// or `false` otherwise.
+func validateScheme(scheme string) bool {
+	if len(scheme) >= 4 && scheme[:4] == "http" ||
+		len(scheme) >= 3 && scheme[:3] == "ftp" {
+		return true
+	}
+	return false
+}
+
 // formatLink is an helper function used to format an URL in the proper way.
 // It uses `URL` as the URL where the `link` was retrieved from. It returns
 // a string representing a valid `URL` or an empty `string` if an `error` occurs
@@ -22,7 +32,7 @@ func formatLink(URL, link string) (string, error) {
 		return "", fmt.Errorf("formatLink: %v found in %s", err, link)
 	}
 
-	if len(linkURL.Scheme) >= 4 && linkURL.Scheme[:4] == "http" {
+	if validateScheme(linkURL.Scheme) {
 		return link, nil
 	}
 
