@@ -14,9 +14,6 @@ RUN adduser -D -g '' appuser
 FROM scratch
 LABEL maintainer="timothee.tosi@gmail.com"
 
-# Copy configuration file.
-COPY ./mcrawler.conf.yaml /mcrawler.conf.yaml
-
 # Copy service binary.
 COPY ./mcrawler /mcrawler
 
