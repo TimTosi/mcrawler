@@ -138,14 +138,14 @@ go build && ./mcrawler "http://localhost:8080"
 Here is a list and small description of components provided with this program:
 
 * [Worker](https://github.com/TimTosi/mcrawler/blob/master/internal/worker.go):
-This component fetch a webpage located at `domain.Target.BaseURL` and populates
-`domain.Target.Content`.
+This component fetches a webpage located at `domain.Target.BaseURL` and
+populates `domain.Target.Content`.
 
 * [Archiver](https://github.com/TimTosi/mcrawler/blob/master/internal/archiver.go):
 This component discards any `domain.Target` already seen.
 
-* [Mapper](https://github.com/TimTosi/mcrawler/blob/master/internal/mapper.go):
-This component keep a record of every single `domain.Target` passing
+* [Mapper](https://github.com/TimTosi/mcrawler/blob/master/internal/mapper/mapper.go):
+This component keeps a record of every single `domain.Target` passing
 through to display a sitemap visualization with the `mapper.Render` function.
 
 * [Follower](https://github.com/TimTosi/mcrawler/blob/master/internal/follower.go):
