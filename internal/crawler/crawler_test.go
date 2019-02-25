@@ -87,7 +87,7 @@ func TestCrawler_Run(t *testing.T) {
 	m := mapper.NewMapper()
 	f, err := internal.NewFollower(tgt.BaseURL)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("TestCrawler_Run: %v", err)
 	}
 
 	if err := NewCrawler().Run(
@@ -100,6 +100,21 @@ func TestCrawler_Run(t *testing.T) {
 	); err != nil {
 		log.Fatal(err)
 	}
-	m.Render()
-	// NEED FINAL ASSERT HERE
+
+	assert.ElementsMatch(
+		t,
+		[]string{
+			"http://localhost:8080/home",
+			"http://localhost:8080/team",
+			"http://localhost:8080/about",
+			"http://localhost:8080/notfound",
+			"http://localhost:8080/img1.jpg",
+			"http://localhost:8080/img2.png",
+			"http://localhost:8080/img3.png",
+			"http://external1.com",
+			"http://external2.com",
+			"ftp://www.run-test.com",
+		},
+		m.SiteMap(),
+	)
 }
