@@ -17,31 +17,27 @@ import (
 // a string representing a valid `URL` or an empty `string` if an `error` occurs
 // during parsing.
 func formatLink(URL, link string) (string, error) {
-	baseURL, err := url.Parse(URL)
-	if err != nil || link == "" {
-		return "", fmt.Errorf("formatLink: %v found in %s", err, baseURL)
-	}
 	linkURL, err := url.Parse(link)
 	if err != nil {
 		return "", fmt.Errorf("formatLink: %v found in %s", err, link)
 	}
 
-	if len(linkURL.Scheme) >= 4 && linkURL.Scheme[:4] == "http" { // not stripped here ?
+	if len(linkURL.Scheme) >= 4 && linkURL.Scheme[:4] == "http" {
 		return link, nil
 	}
 
-	if link[0] == '/' || link[0] == '.' || link[len(link)-1] == '/' {
-		link = strings.Trim(link, "/")
-		link = strings.Replace(link, "../", "", -1)
-		link = strings.Replace(link, "./", "", -1)
-		return strings.Join([]string{baseURL.Scheme, "://", baseURL.Host, "/", link}, ""), nil // what about query here ?
+	baseURL, err := url.Parse(URL)
+	if err != nil {
+		return "", fmt.Errorf("formatLink: %v found in %s", err, baseURL)
+	} else if len(baseURL.Scheme) < 4 || len(baseURL.Host) == 0 {
+		return "", fmt.Errorf("formatLink: URL %s incomplete", URL)
 	}
 
-	finalLink := strings.Join([]string{baseURL.Scheme, "://", baseURL.Host, baseURL.Path}, "")
-	if baseURL.RawQuery != "" {
-		finalLink += "?" + baseURL.RawQuery
+	if link[0] == '/' || link[len(link)-1] == '/' {
+		link = strings.Trim(link, "/")
 	}
-	return finalLink + link, nil
+
+	return strings.Join([]string{baseURL.Scheme, "://", baseURL.Host, "/", link}, ""), nil
 }
 
 // CheckFunc is a named type representing a function that checks if an
