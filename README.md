@@ -135,21 +135,27 @@ go build && ./mcrawler "http://localhost:8080"
 
 ## Component List
 
-Here is a list and description of components provided with this program:
+Here is a list and small description of components provided with this program:
 
-* Worker: This component fetch a webpage located at `domain.Target.BaseURL` and
-populates `domain.Target.Content`.
+* [Worker](https://github.com/TimTosi/mcrawler/blob/master/internal/worker.go):
+This component fetch a webpage located at `domain.Target.BaseURL` and populates
+`domain.Target.Content`.
 
-* Archiver: This component discards any `domain.Target` already seen.
+* [Archiver](https://github.com/TimTosi/mcrawler/blob/master/internal/archiver.go):
+This component discards any `domain.Target` already seen.
 
-* Mapper: This component keep a record of every single `domain.Target` passing
+* [Mapper](https://github.com/TimTosi/mcrawler/blob/master/internal/mapper.go):
+This component keep a record of every single `domain.Target` passing
 through to display a sitemap visualization with the `mapper.Render` function.
 
-* Follower: This component discards `domain.Target` when a different host
-than `internal.Follower.originHost` is found.
+* [Follower](https://github.com/TimTosi/mcrawler/blob/master/internal/follower.go):
+This component discards `domain.Target` when a different host than
+`internal.Follower.originHost` is found.
 
-* Extractor: This component parses `domain.Target` to retrieve any link matching
-with one of its `extractor.CheckFunc` function.
+* [Extractor](https://github.com/TimTosi/mcrawler/blob/master/internal/extractor/extractor.go):
+This component parses `domain.Target` to retrieve any link matching with one of
+its [extractor.CheckFunc](https://github.com/TimTosi/mcrawler/blob/master/internal/extractor/extractor.go#L55)
+function.
 
 
 ## How To Add a Component
