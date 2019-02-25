@@ -18,7 +18,7 @@ import (
 // during parsing.
 func formatLink(URL, link string) (string, error) {
 	linkURL, err := url.Parse(link)
-	if err != nil {
+	if err != nil || len(link) == 0 {
 		return "", fmt.Errorf("formatLink: %v found in %s", err, link)
 	}
 
@@ -51,7 +51,7 @@ type Extractor struct {
 }
 
 // NewExtractor returns a new `*extractor.Extractor`.
-func NewExtractor(checkFuncs ...func(html.Token, html.TokenType) string) *Extractor {
+func NewExtractor(checkFuncs ...CheckFunc) *Extractor {
 	e := Extractor{cf: make([]CheckFunc, 0)}
 	for _, f := range checkFuncs {
 		e.cf = append(e.cf, f)
