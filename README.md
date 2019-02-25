@@ -1,6 +1,5 @@
 <h1 align="center">Mini Web Crawler</h1>
 
-<p align="center"><img src="assets/intro.gif" alt="intro logo" width="500" /></p>
 <p align="center">
     <a href="https://codecov.io/gh/TimTosi/mcrawler">
         <img src="https://codecov.io/gh/TimTosi/mcrawler/branch/master/graph/badge.svg" alt="codecov" />
@@ -115,7 +114,7 @@ that crawls a website located at `localhost:8080`.
 You can use the `run` target in the provided Makefile to use it easily.
 
 > :bulb: If you want to change the crawled target, you will have to update the
-> [Docker Compose file](https://github.com/TimTosi/mcrawler/blob/master/deployments/docker-compose.yaml#10)
+> [Docker Compose file](https://github.com/TimTosi/mcrawler/blob/master/deployments/docker-compose.yaml#L10)
 > accordingly.
 
 
@@ -172,6 +171,7 @@ func (up *UserPipe) Pipe(wg *sync.WaitGroup, in <-chan *domain.Target, out chan<
 	}
 }
 ```
+
 
 Then you just have to plug it in the main:
 
