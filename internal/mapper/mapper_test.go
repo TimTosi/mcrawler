@@ -60,6 +60,38 @@ func TestMapper_Add(t *testing.T) {
 	}
 }
 
+func TestMapper_SiteMap(t *testing.T) {
+	testCases := []struct {
+		name            string
+		mockSiteMap     []string
+		expectedSiteMap []string
+	}{
+		{
+			"empty",
+			[]string{},
+			[]string{},
+		},
+		{
+			"regular_single",
+			[]string{"test1"},
+			[]string{"test1"},
+		},
+		{
+			"regular_multiple",
+			[]string{"test1", "test2", "test3"},
+			[]string{"test1", "test2", "test3"},
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			m := NewMapper()
+			m.siteMap = tc.mockSiteMap
+			assert.ElementsMatch(t, tc.expectedSiteMap, m.SiteMap())
+		})
+	}
+}
+
 func TestMapper_Render(t *testing.T) {
 	testCases := []struct {
 		name           string
