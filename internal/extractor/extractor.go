@@ -112,11 +112,15 @@ func (e *Extractor) Pipe(wg *sync.WaitGroup, in <-chan *domain.Target, out chan<
 	defer close(out)
 
 	for t := range in {
-		links := e.ExtractLinks(t.BaseURL, t.Content)
-		for _, link := range links {
-			wg.Add(1)
-			go func(l string) { out <- domain.NewTarget(l) }(link)
-		}
-		wg.Done()
+		wg.Add(1)
+		go func(tgt *domain.Target) {
+			links := e.ExtractLinks(tgt.BaseURL, tgt.Content)
+			for _, link := range links {
+				wg.Add(1)
+				go func(l string) { out <- domain.NewTarget(l) }(link)
+			}
+			wg.Done()
+			wg.Done()
+		}(t)
 	}
 }
