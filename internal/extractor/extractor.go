@@ -43,7 +43,7 @@ func formatLink(URL, link string) (string, error) {
 	baseURL, err := url.Parse(URL)
 	if err != nil {
 		return "", fmt.Errorf("formatLink: %v found in %s", err, baseURL)
-	} else if len(baseURL.Scheme) < 4 || len(baseURL.Host) == 0 {
+	} else if len(baseURL.Host) == 0 {
 		return "", fmt.Errorf("formatLink: URL %s incomplete", URL)
 	}
 

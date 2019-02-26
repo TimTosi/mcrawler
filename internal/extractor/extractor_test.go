@@ -107,8 +107,15 @@ func TestExtractor_formatLink(t *testing.T) {
 		},
 		{
 			"badScheme",
-			"ftp://www.format.com",
+			"/",
 			"/path-total?arg=ok#Fragment",
+			"",
+			assert.NotNil,
+		},
+		{
+			"emptyLink",
+			"http://www.format.com",
+			"",
 			"",
 			assert.NotNil,
 		},
