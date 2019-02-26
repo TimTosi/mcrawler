@@ -16,7 +16,7 @@ import (
 // or `false` otherwise.
 func validateScheme(scheme string) bool {
 	if len(scheme) >= 4 && scheme[:4] == "http" ||
-		len(scheme) >= 3 && scheme[:3] == "ftp" {
+		len(scheme) == 3 && scheme[:3] == "ftp" {
 		return true
 	}
 	return false
@@ -27,8 +27,12 @@ func validateScheme(scheme string) bool {
 // a string representing a valid `URL` or an empty `string` if an `error` occurs
 // during parsing.
 func formatLink(URL, link string) (string, error) {
+	if len(link) == 0 {
+		return "", fmt.Errorf("formatLink: link is empty")
+	}
+
 	linkURL, err := url.Parse(link)
-	if err != nil || len(link) == 0 {
+	if err != nil {
 		return "", fmt.Errorf("formatLink: %v found in %s", err, link)
 	}
 
@@ -39,7 +43,7 @@ func formatLink(URL, link string) (string, error) {
 	baseURL, err := url.Parse(URL)
 	if err != nil {
 		return "", fmt.Errorf("formatLink: %v found in %s", err, baseURL)
-	} else if len(baseURL.Scheme) < 4 || len(baseURL.Host) == 0 {
+	} else if len(baseURL.Host) == 0 {
 		return "", fmt.Errorf("formatLink: URL %s incomplete", URL)
 	}
 
@@ -71,18 +75,25 @@ func NewExtractor(checkFuncs ...CheckFunc) *Extractor {
 // `content` and matching any `e.cf` function.
 func (e *Extractor) ExtractLinks(baseURL string, content []byte) []string {
 	var links []string
+	rawLink := ""
 	uniqueLinks := make(map[string]bool)
 	tokenizer := html.NewTokenizer(bytes.NewReader(content))
 
 	for tokenType := tokenizer.Next(); tokenType != html.ErrorToken; tokenType = tokenizer.Next() {
 		tkn := tokenizer.Token()
 		for _, cf := range e.cf {
-			if link, err := formatLink(baseURL, cf(tkn, tokenType)); err == nil && link != "" {
+
+			if rawLink = cf(tkn, tokenType); len(rawLink) == 0 {
+				continue
+			}
+
+			if link, err := formatLink(baseURL, rawLink); err == nil && link != "" {
 				uniqueLinks[link] = true
 				break
 			} else {
 				log.Printf("ExtractLinks: %s => %v ", link, err)
 			}
+
 		}
 	}
 
@@ -101,11 +112,15 @@ func (e *Extractor) Pipe(wg *sync.WaitGroup, in <-chan *domain.Target, out chan<
 	defer close(out)
 
 	for t := range in {
-		links := e.ExtractLinks(t.BaseURL, t.Content)
-		for _, link := range links {
-			wg.Add(1)
-			out <- domain.NewTarget(link)
-		}
-		wg.Done()
+		wg.Add(1)
+		go func(tgt *domain.Target) {
+			links := e.ExtractLinks(tgt.BaseURL, tgt.Content)
+			for _, link := range links {
+				wg.Add(1)
+				go func(l string) { out <- domain.NewTarget(l) }(link)
+			}
+			wg.Done()
+			wg.Done()
+		}(t)
 	}
 }

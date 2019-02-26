@@ -73,11 +73,15 @@ func (w *Worker) Pipe(wg *sync.WaitGroup, in <-chan *domain.Target, out chan<- *
 	defer close(out)
 
 	for t := range in {
-		if err := w.Fetch(t); err != nil {
-			log.Printf("Worker: %f", err)
+		wg.Add(1)
+		go func(tgt *domain.Target) {
+			if err := w.Fetch(tgt); err != nil {
+				log.Printf("Worker: %f", err)
+				wg.Done()
+			} else {
+				out <- tgt
+			}
 			wg.Done()
-		} else {
-			out <- t
-		}
+		}(t)
 	}
 }
