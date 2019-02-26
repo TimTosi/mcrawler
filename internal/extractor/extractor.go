@@ -75,6 +75,7 @@ func NewExtractor(checkFuncs ...CheckFunc) *Extractor {
 // `content` and matching any `e.cf` function.
 func (e *Extractor) ExtractLinks(baseURL string, content []byte) []string {
 	var links []string
+	rawLink := ""
 	uniqueLinks := make(map[string]bool)
 	tokenizer := html.NewTokenizer(bytes.NewReader(content))
 
@@ -82,7 +83,11 @@ func (e *Extractor) ExtractLinks(baseURL string, content []byte) []string {
 		tkn := tokenizer.Token()
 		for _, cf := range e.cf {
 
-			if link, err := formatLink(baseURL, cf(tkn, tokenType)); err == nil && link != "" {
+			if rawLink = cf(tkn, tokenType); len(rawLink) == 0 {
+				continue
+			}
+
+			if link, err := formatLink(baseURL, rawLink); err == nil && link != "" {
 				uniqueLinks[link] = true
 				break
 			} else {
