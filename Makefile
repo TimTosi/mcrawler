@@ -33,7 +33,7 @@ docker-build: build
 # NOTE: This rule require gcc to be found in the `$PATH`.
 .PHONY: lint
 lint:
-		@golangci-lint run --config ./conf/.golangci.yml && \
+		@golangci-lint run --config conf/golangci.yml && \
 		echo "linter pass ok !"
 
 # Runs test suite.
