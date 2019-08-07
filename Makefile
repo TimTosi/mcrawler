@@ -39,7 +39,7 @@ lint:
 # Runs test suite.
 .PHONY: test
 test: lint
-		go test -v -coverprofile=coverage.txt -tags integration -race -cover -timeout=120s
+		go test -v -coverprofile=coverage.txt -tags integration -race -cover -timeout=120s ./...
 
 # Run project locally.
 .PHONY: run
