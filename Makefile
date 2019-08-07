@@ -1,4 +1,4 @@
-# This file is the development Makefile for the mcrawler project.
+# This file is the development Makefile for the project in this repository.
 # All variables listed here are used as substitution in these Makefile targets.
 
 SERVICE-NAME = mcrawler
@@ -15,11 +15,7 @@ endef
 # NOTE: Docker & Docker Compose should already be installed.
 .PHONY: install
 install:
-		curl https://glide.sh/get | sh
-		go get -u github.com/alecthomas/gometalinter
-		gometalinter --install
-		glide update
-		glide install
+		GO111MODULE=on go get github.com/golangci/golangci-lint/cmd/golangci-lint@v1.17.1
 
 # Build project binaries.
 .PHONY: build
@@ -37,7 +33,7 @@ docker-build: build
 # NOTE: This rule require gcc to be found in the `$PATH`.
 .PHONY: lint
 lint:
-		@gometalinter --config=conf/gometalinter_conf.json ./... && \
+		@golangci-lint run --config ./conf/.golangci.yml && \
 		echo "linter pass ok !"
 
 # Runs test suite.
